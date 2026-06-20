@@ -1,0 +1,120 @@
+stages:
+  data_prep:
+    cmd: python src/data/data_prep.py
+    deps:
+    - data/raw/jigsaw_toxic_comment_classification_test.csv
+    - data/raw/jigsaw_toxic_comment_classification_train.csv
+    - src/data/data_prep.py
+    outs:
+    - data/processed/merged_test.csv
+    - data/processed/merged_train.csv
+  glove_features:
+    cmd: python src/features/glove_features.py
+    deps:
+    - data/processed/merged_train.csv
+    - glove.6B.100d.txt
+    - params.yaml
+    - src/features/glove_features.py
+    outs:
+    - data/processed/X_train_emb.npy
+    - data/processed/X_valid_emb.npy
+    - data/processed/y_train_emb.npy
+    - data/processed/y_valid_emb.npy
+    - data/processed/glove_embeddings.pkl
+  tfidf_features:
+    cmd: python src/features/tfidf_features.py
+    deps:
+    - data/processed/merged_train.csv
+    - src/features/tfidf_features.py
+    outs:
+    - data/processed/X_test_tfidf.npz
+    - data/processed/X_train_tfidf.npz
+    - data/processed/X_val_tfidf.npz
+    - data/processed/vectorizer.pkl
+    - data/processed/y_test.npy
+    - data/processed/y_train.npy
+    - data/processed/y_val.npy
+  train_rfc_xgb_nb:
+    cmd: python src/models/train_rfc_xgb_nb.py
+    deps:
+    - data/processed/X_train_tfidf.npz
+    - data/processed/X_val_tfidf.npz
+    - data/processed/y_train.npy
+    - data/processed/y_val.npy
+    - src/models/train_rfc_xgb_nb.py
+    - params.yaml
+    outs:
+    - model/naive_bayes.pkl
+    - model/random_forest.pkl
+    - model/xgboost.pkl
+    - reports/metrics/nb_metrics.json
+    - reports/metrics/rf_metrics.json
+    - reports/metrics/xgb_metrics.json
+  bilstm_features:
+    cmd: python src/features/bilstm_features.py
+    deps:
+    - data/processed/glove_embeddings.pkl
+    - data/processed/merged_train.csv
+    - params.yaml
+    - src/features/bilstm_features.py
+    outs:
+    - data/processed/X_test_seq.npy
+    - data/processed/X_train_seq.npy
+    - data/processed/X_val_seq.npy
+    - data/processed/y_test_seq.npy
+    - data/processed/y_train_seq.npy
+    - data/processed/y_val_seq.npy
+  train_BILSTM:
+    cmd: python src/models/train_BILSTM.py
+    deps:
+    - data/processed/X_test_seq.npy
+    - data/processed/X_train_seq.npy
+    - data/processed/X_val_seq.npy
+    - data/processed/y_test_seq.npy
+    - data/processed/y_train_seq.npy
+    - data/processed/y_val_seq.npy
+    - params.yaml
+    - src/models/BILSTM_model.py
+    - src/models/train_BILSTM.py
+    outs:
+    - model/bilstm_model.pth
+    metrics:
+    - reports/metrics/bilstm_metrics.json
+  train_ensemble:
+    cmd: python src/models/train_ensemble.py
+    deps:
+    - data/processed/X_test_seq.npy
+    - data/processed/X_test_tfidf.npz
+    - data/processed/X_val_seq.npy
+    - data/processed/X_val_tfidf.npz
+    - data/processed/y_test.npy
+    - data/processed/y_test_seq.npy
+    - data/processed/y_val.npy
+    - data/processed/y_val_seq.npy
+    - model/bilstm_model.pth
+    - model/naive_bayes.pkl
+    - model/random_forest.pkl
+    - model/xgboost.pkl
+    - params.yaml
+    - src/models/BILSTM_model.py
+    - src/models/train_ensemble.py
+    outs:
+    - model/meta_ensemble.pkl
+    metrics:
+    - reports/metrics/ensemble_metrics.json
+  evalvation:
+    cmd: python -m src.models.model_evalvation
+    deps:
+    - data/processed/glove_embeddings.pkl
+    - data/processed/merged_test.csv
+    - data/processed/vectorizer.pkl
+    - model/bilstm_model.pth
+    - model/meta_ensemble.pkl
+    - model/naive_bayes.pkl
+    - model/random_forest.pkl
+    - model/xgboost.pkl
+    - params.yaml
+    - src/models/BILSTM_model.py
+    - src/models/model_evalvation.py
+    outs:
+    - reports/predictions/test_predictions.json

@@ -1,0 +1,374 @@
+schema: '2.0'
+stages:
+  data_prep:
+    cmd: python src/data/data_prep.py
+    deps:
+    - path: data/raw/jigsaw_toxic_comment_classification_test.csv
+      hash: md5
+      md5: 4a3e670382dd8766de5269100ae64fb5
+      size: 9167
+    - path: data/raw/jigsaw_toxic_comment_classification_train.csv
+      hash: md5
+      md5: adfba9f240d1acb1cfee923ef6f09976
+      size: 1971422
+    - path: src/data/data_prep.py
+      hash: md5
+      md5: f452d91d4850d51d8ed36b72e10118cd
+      size: 2545
+    outs:
+    - path: data/processed/merged_test.csv
+      hash: md5
+      md5: 70dab0815a3ac3edbb9e26dc9c5b22e5
+      size: 2118
+    - path: data/processed/merged_train.csv
+      hash: md5
+      md5: 0b341860f8a1a700c593b96431c81219
+      size: 2377054
+  glove_features:
+    cmd: python src/features/glove_features.py
+    deps:
+    - path: data/processed/merged_train.csv
+      hash: md5
+      md5: 0b341860f8a1a700c593b96431c81219
+      size: 2377054
+    - path: glove.6B.100d.txt
+      hash: md5
+      md5: e5bf6ea569720f63b5a8675ac97d172b
+      size: 56623104
+    - path: params.yaml
+      hash: md5
+      md5: b6260edab3dacc8ba9bf96733ecfe758
+      size: 285
+    - path: src/features/glove_features.py
+      hash: md5
+      md5: 3e98f0299d80fb7b4eaed7eee6537090
+      size: 3795
+    outs:
+    - path: data/processed/X_train_emb.npy
+      hash: md5
+      md5: 1bd7a272162512de1f01bea952ddc157
+      size: 3246528
+    - path: data/processed/X_valid_emb.npy
+      hash: md5
+      md5: 02891f7b416e57599fde75d9f9088e95
+      size: 811728
+    - path: data/processed/glove_embeddings.pkl
+      hash: md5
+      md5: 58778ab71b8b05c44848cd673146360c
+      size: 29219608
+    - path: data/processed/y_train_emb.npy
+      hash: md5
+      md5: 585f1b449592f44ad2d7b494395008f9
+      size: 65056
+    - path: data/processed/y_valid_emb.npy
+      hash: md5
+      md5: e70a66629f71b54c4ddd70ad814622a4
+      size: 16360
+  tfidf_features:
+    cmd: python src/features/tfidf_features.py
+    deps:
+    - path: data/processed/merged_train.csv
+      hash: md5
+      md5: 0b341860f8a1a700c593b96431c81219
+      size: 2377054
+    - path: src/features/tfidf_features.py
+      hash: md5
+      md5: a4d5bcbabf773f5d685fd1602ae04426
+      size: 2636
+    outs:
+    - path: data/processed/X_test_tfidf.npz
+      hash: md5
+      md5: 4e08a591e5bd1e94623557786b7c86d1
+      size: 336640
+    - path: data/processed/X_train_tfidf.npz
+      hash: md5
+      md5: 9700d349f5abaca87da65c14f90e111b
+      size: 1612233
+    - path: data/processed/X_val_tfidf.npz
+      hash: md5
+      md5: cd4d781325b588a6e6172304dd2dd4a5
+      size: 297157
+    - path: data/processed/vectorizer.pkl
+      hash: md5
+      md5: 4f420f63edadaf1d00c51c5c406fe5a2
+      size: 261495
+    - path: data/processed/y_test.npy
+      hash: md5
+      md5: 165e1e5d11e971023ad78703af7f1384
+      size: 12304
+    - path: data/processed/y_train.npy
+      hash: md5
+      md5: c1cde047471929f7a9d2a6843abcd8f7
+      size: 58760
+    - path: data/processed/y_val.npy
+      hash: md5
+      md5: c2d6fbb6f9fb2694452826eca949ff4d
+      size: 10480
+  train_rfc_xgb_nb:
+    cmd: python src/models/train_rfc_xgb_nb.py
+    deps:
+    - path: data/processed/X_train_tfidf.npz
+      hash: md5
+      md5: 9700d349f5abaca87da65c14f90e111b
+      size: 1612233
+    - path: data/processed/X_val_tfidf.npz
+      hash: md5
+      md5: cd4d781325b588a6e6172304dd2dd4a5
+      size: 297157
+    - path: data/processed/y_train.npy
+      hash: md5
+      md5: c1cde047471929f7a9d2a6843abcd8f7
+      size: 58760
+    - path: data/processed/y_val.npy
+      hash: md5
+      md5: c2d6fbb6f9fb2694452826eca949ff4d
+      size: 10480
+    - path: params.yaml
+      hash: md5
+      md5: b6260edab3dacc8ba9bf96733ecfe758
+      size: 285
+    - path: src/models/train_rfc_xgb_nb.py
+      hash: md5
+      md5: ae02ae2bd091e95905c21b40b7fd6449
+      size: 5056
+    outs:
+    - path: model/naive_bayes.pkl
+      hash: md5
+      md5: 0a12899e08e6554e413f84701a32a0fc
+      size: 228009
+    - path: model/random_forest.pkl
+      hash: md5
+      md5: 2c9f75d7955c227150d3e20d69b4c58f
+      size: 20564771
+    - path: model/xgboost.pkl
+      hash: md5
+      md5: b8b7a4a339d0899960ed2d811c5dc78d
+      size: 160345
+    - path: reports/metrics/nb_metrics.json
+      hash: md5
+      md5: 6174dac2581a6aa61dac640b1dd98deb
+      size: 907
+    - path: reports/metrics/rf_metrics.json
+      hash: md5
+      md5: ee3fdd43b8ea16e0c7ae9ce15af1c677
+      size: 909
+    - path: reports/metrics/xgb_metrics.json
+      hash: md5
+      md5: 0390653a77355df9da6f3d6d33228c74
+      size: 909
+  bilstm_features:
+    cmd: python src/features/bilstm_features.py
+    deps:
+    - path: data/processed/glove_embeddings.pkl
+      hash: md5
+      md5: 58778ab71b8b05c44848cd673146360c
+      size: 29219608
+    - path: data/processed/merged_train.csv
+      hash: md5
+      md5: 0b341860f8a1a700c593b96431c81219
+      size: 2377054
+    - path: params.yaml
+      hash: md5
+      md5: b6260edab3dacc8ba9bf96733ecfe758
+      size: 285
+    - path: src/features/bilstm_features.py
+      hash: md5
+      md5: 1a2703173d8bf657155c6b94c1c716e0
+      size: 4207
+    outs:
+    - path: data/processed/X_test_seq.npy
+      hash: md5
+      md5: b7e7b46186162d35e06355eef90bd1f6
+      size: 121760128
+    - path: data/processed/X_train_seq.npy
+      hash: md5
+      md5: c58cd5978d73a7a1e023644abb52f6c5
+      size: 586320128
+    - path: data/processed/X_val_seq.npy
+      hash: md5
+      md5: bc5cc65355d8a15791d656f3224b34b4
+      size: 103520128
+    - path: data/processed/y_test_seq.npy
+      hash: md5
+      md5: 165e1e5d11e971023ad78703af7f1384
+      size: 12304
+    - path: data/processed/y_train_seq.npy
+      hash: md5
+      md5: c1cde047471929f7a9d2a6843abcd8f7
+      size: 58760
+    - path: data/processed/y_val_seq.npy
+      hash: md5
+      md5: c2d6fbb6f9fb2694452826eca949ff4d
+      size: 10480
+  train_BILSTM:
+    cmd: python src/models/train_BILSTM.py
+    deps:
+    - path: data/processed/X_test_seq.npy
+      hash: md5
+      md5: b7e7b46186162d35e06355eef90bd1f6
+      size: 121760128
+    - path: data/processed/X_train_seq.npy
+      hash: md5
+      md5: c58cd5978d73a7a1e023644abb52f6c5
+      size: 586320128
+    - path: data/processed/X_val_seq.npy
+      hash: md5
+      md5: bc5cc65355d8a15791d656f3224b34b4
+      size: 103520128
+    - path: data/processed/y_test_seq.npy
+      hash: md5
+      md5: 165e1e5d11e971023ad78703af7f1384
+      size: 12304
+    - path: data/processed/y_train_seq.npy
+      hash: md5
+      md5: c1cde047471929f7a9d2a6843abcd8f7
+      size: 58760
+    - path: data/processed/y_val_seq.npy
+      hash: md5
+      md5: c2d6fbb6f9fb2694452826eca949ff4d
+      size: 10480
+    - path: params.yaml
+      hash: md5
+      md5: b6260edab3dacc8ba9bf96733ecfe758
+      size: 285
+    - path: src/models/BILSTM_model.py
+      hash: md5
+      md5: 97bcfc1df8c85c08e92bba1a2cd22917
+      size: 1037
+    - path: src/models/train_BILSTM.py
+      hash: md5
+      md5: d0c85be92461d95176fefd9970adc5c5
+      size: 7005
+    outs:
+    - path: model/bilstm_model.pth
+      hash: md5
+      md5: c7e5c4a9afa5202789d3cf9c643f31e4
+      size: 1212379
+    - path: reports/metrics/bilstm_metrics.json
+      hash: md5
+      md5: a16b3a7488e5c214d8384c9e08734ac9
+      size: 45
+  train_ensemble:
+    cmd: python src/models/train_ensemble.py
+    deps:
+    - path: data/processed/X_test_seq.npy
+      hash: md5
+      md5: b7e7b46186162d35e06355eef90bd1f6
+      size: 121760128
+    - path: data/processed/X_test_tfidf.npz
+      hash: md5
+      md5: 4e08a591e5bd1e94623557786b7c86d1
+      size: 336640
+    - path: data/processed/X_val_seq.npy
+      hash: md5
+      md5: bc5cc65355d8a15791d656f3224b34b4
+      size: 103520128
+    - path: data/processed/X_val_tfidf.npz
+      hash: md5
+      md5: cd4d781325b588a6e6172304dd2dd4a5
+      size: 297157
+    - path: data/processed/y_test.npy
+      hash: md5
+      md5: 165e1e5d11e971023ad78703af7f1384
+      size: 12304
+    - path: data/processed/y_test_seq.npy
+      hash: md5
+      md5: 165e1e5d11e971023ad78703af7f1384
+      size: 12304
+    - path: data/processed/y_val.npy
+      hash: md5
+      md5: c2d6fbb6f9fb2694452826eca949ff4d
+      size: 10480
+    - path: data/processed/y_val_seq.npy
+      hash: md5
+      md5: c2d6fbb6f9fb2694452826eca949ff4d
+      size: 10480
+    - path: model/bilstm_model.pth
+      hash: md5
+      md5: c7e5c4a9afa5202789d3cf9c643f31e4
+      size: 1212379
+    - path: model/naive_bayes.pkl
+      hash: md5
+      md5: 0a12899e08e6554e413f84701a32a0fc
+      size: 228009
+    - path: model/random_forest.pkl
+      hash: md5
+      md5: 2c9f75d7955c227150d3e20d69b4c58f
+      size: 20564771
+    - path: model/xgboost.pkl
+      hash: md5
+      md5: b8b7a4a339d0899960ed2d811c5dc78d
+      size: 160345
+    - path: params.yaml
+      hash: md5
+      md5: b6260edab3dacc8ba9bf96733ecfe758
+      size: 285
+    - path: src/models/BILSTM_model.py
+      hash: md5
+      md5: 97bcfc1df8c85c08e92bba1a2cd22917
+      size: 1037
+    - path: src/models/train_ensemble.py
+      hash: md5
+      md5: 5b6c731cb8a132463d6f4918ca537245
+      size: 6826
+    outs:
+    - path: model/meta_ensemble.pkl
+      hash: md5
+      md5: b934df9070dfc2a1b0ea386554933bbd
+      size: 736
+    - path: reports/metrics/ensemble_metrics.json
+      hash: md5
+      md5: 7ef9f4da2260efbb009ea26da4117568
+      size: 904
+  evalvation:
+    cmd: python -m src.models.model_evalvation
+    deps:
+    - path: data/processed/glove_embeddings.pkl
+      hash: md5
+      md5: 58778ab71b8b05c44848cd673146360c
+      size: 29219608
+    - path: data/processed/merged_test.csv
+      hash: md5
+      md5: 70dab0815a3ac3edbb9e26dc9c5b22e5
+      size: 2118
+    - path: data/processed/vectorizer.pkl
+      hash: md5
+      md5: 4f420f63edadaf1d00c51c5c406fe5a2
+      size: 261495
+    - path: model/bilstm_model.pth
+      hash: md5
+      md5: c7e5c4a9afa5202789d3cf9c643f31e4
+      size: 1212379
+    - path: model/meta_ensemble.pkl
+      hash: md5
+      md5: b934df9070dfc2a1b0ea386554933bbd
+      size: 736
+    - path: model/naive_bayes.pkl
+      hash: md5
+      md5: 0a12899e08e6554e413f84701a32a0fc
+      size: 228009
+    - path: model/random_forest.pkl
+      hash: md5
+      md5: 2c9f75d7955c227150d3e20d69b4c58f
+      size: 20564771
+    - path: model/xgboost.pkl
+      hash: md5
+      md5: b8b7a4a339d0899960ed2d811c5dc78d
+      size: 160345
+    - path: params.yaml
+      hash: md5
+      md5: b6260edab3dacc8ba9bf96733ecfe758
+      size: 285
+    - path: src/models/BILSTM_model.py
+      hash: md5
+      md5: 97bcfc1df8c85c08e92bba1a2cd22917
+      size: 1037
+    - path: src/models/model_evalvation.py
+      hash: md5
+      md5: 3b5985eb84e780bd978cdb9acaf05d71
+      size: 7403
+    outs:
+    - path: reports/predictions/test_predictions.json
+      hash: md5
+      md5: a6006221a94ba0d7d3cd5c3c1c7fb99c
+      size: 3783

@@ -1,0 +1,18 @@
+glove_features:
+  embedding_dim: 100
+  test_sizes: 0.2
+
+train_rfc_xgb_nb:
+  rfc_n_estimators: 200 
+
+bilstm_feature:
+  max_len: 100
+  dim: 100
+bilstm:
+  embedding_dim: 100
+  hidden_dim: 128
+  n_layers: 1
+  dropout: 0
+  learning_rate: 0.001
+  epochs: 10
+  batch_size: 32
