@@ -248,7 +248,7 @@ def main():
           prediction_path = ("reports/predictions/test_predictions_mlflow.json")
 
           # Save results
-        save_predictions(merged_df_sub["merged_text"],pred_probs,pred_labels,prediction_path)
+          save_predictions(merged_df_sub["merged_text"],pred_probs,pred_labels,prediction_path)
           # metrics
           num_toxic = int(np.sum(pred_labels))
 
