@@ -13,6 +13,17 @@ import dagshub
 import mlflow
 from mlflow.models import infer_signature
 
+dagshub_token = os.getenv("JTC_CLASSIFICATION")
+if not dagshub_token:
+    raise EnvironmentError("DAGSHUB_TOKEN environment variable is not set")
+os.environ["MLFLOW_TRACKING_USERNAME"] = dagshub_token
+os.environ["MLFLOW_TRACKING_USERNAME"] = dagshub_token
+
+dagshub_url = "https://dagshub.com"
+repo_owner = "ankit-gadhwal"
+repo_name = "1_jigshaw_toxic_comment_classification"
+mlflow.set_tracking_uri(f"{dagshub_url}/{repo_owner}/{repo_name}.mlflow")
+
 def get_or_create_experiment_id(experiment_name):
 
     experiment = mlflow.get_experiment_by_name(experiment_name)
@@ -237,7 +248,7 @@ def main():
           prediction_path = ("reports/predictions/test_predictions.json")
 
           # Save results
-          save_predictions(merged_df_sub["merged_text"],pred_probs,pred_labels,prediction_path)
+        #   save_predictions(merged_df_sub["merged_text"],pred_probs,pred_labels,prediction_path)
           # metrics
           num_toxic = int(np.sum(pred_labels))
 

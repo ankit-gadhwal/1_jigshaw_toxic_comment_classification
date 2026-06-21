@@ -118,3 +118,27 @@ stages:
     - src/models/model_evalvation.py
     outs:
     - reports/predictions/test_predictions.json
+  
+  evalvation_mlflow:
+    cmd: python -m src.models.model_evaluation_mlflow
+    deps:
+    - data/processed/glove_embeddings.pkl
+    - data/processed/merged_test.csv
+    - data/processed/vectorizer.pkl
+    - model/bilstm_model.pth
+    - model/meta_ensemble.pkl
+    - model/naive_bayes.pkl
+    - model/random_forest.pkl
+    - model/xgboost.pkl
+    - params.yaml
+    - src/models/BILSTM_model.py
+    - src/models/model_evaluation_mlflow.py
+    outs:
+    - reports/run_info.json
+
+  model_registration:
+    cmd: python src/models/model_registory.py
+    deps:
+    - reports/run_info.json
+    - src/models/model_registory.py
+    always_changed: true
