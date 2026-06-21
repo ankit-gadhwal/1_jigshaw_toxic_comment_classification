@@ -25,10 +25,6 @@ jobs:
         run: |
           echo "Files in repro:"
           ls -R
-      - name: Pull train and test data
-        run: |
-          dvc pull data/raw/jigsaw_toxic_comment_classification_train.csv.dvc
-          dvc pull data/raw/jigsaw_toxic_comment_classification_test.csv.dvc
 
       - name: Run DVC pipeline
         env:
