@@ -9,9 +9,9 @@ import numpy as np
 from sklearn.metrics import f1_score
 from src.models.model_evalvation import (load_params,load_vectorizer,load_glove_embeddings,
     create_tfidf_features,create_sequence_features,create_dataloader,
-    get_ml_probabilities,get_bilstm_probabilities,create_meta_features,)
+    get_ml_probabilities,get_bilstm_probabilities,create_meta_features,load_bilstm_model)
 
-dagshub_token = os.getenv("JTC_CLASSIFICATION")
+dagshub_token = os.getenv("DAGSHUB_TOKEN")
 if not dagshub_token:
     raise EnvironmentError("DAGSHUB_TOKEN environment variable is not set")
 
@@ -67,7 +67,14 @@ class TestModelLoading(unittest.TestCase):
 
             nb = mlflow.sklearn.load_model(f"runs:/{run_id}/naive_bayes")
 
-            bilstm_model = mlflow.pytorch.load_model(f"runs:/{run_id}/bilstm")
+            (embedding_dim,
+            hidden_dim,n_layers,dropout,batch_size,max_len,dim) = load_params("params.yaml")
+
+            device = torch.device(
+                  "cuda" if torch.cuda.is_available() else "cpu")
+
+            bilstm_model = load_bilstm_model(device,embedding_dim,hidden_dim,n_layers,dropout)
+            
             ensemble_model = mlflow.sklearn.load_model(f"runs:/{run_id}/meta_ensemble")
         except Exception as e:
             # If loading the modals fails,fail the test and output the error message
