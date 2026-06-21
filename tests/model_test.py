@@ -2,6 +2,7 @@ import unittest
 import mlflow
 from mlflow.tracking import MlflowClient
 import os
+import mlflow.xgboost
 import pandas as pd
 import torch
 import numpy as np
@@ -60,7 +61,7 @@ class TestModelLoading(unittest.TestCase):
                 # try to load the model from the specified path
             rf = mlflow.sklearn.load_model(f"runs:/{run_id}/random_forest")
 
-            xgb_model = mlflow.sklearn.load_model(f"runs:/{run_id}/xgboost")
+            xgb_model = mlflow.xgboost.load_model(f"runs:/{run_id}/xgboost")
 
             nb = mlflow.sklearn.load_model(f"runs:/{run_id}/naive_bayes")
 
@@ -132,6 +133,6 @@ class TestModelLoading(unittest.TestCase):
         print(f"F1 Score = {f1:.4f}")
 
         self.assertGreater(f1,0.75,f"F1 score too low ({f1:.4f})")
-        
+
 if __name__ == "__main__":
     unittest.main()

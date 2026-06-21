@@ -12,6 +12,7 @@ import yaml
 import dagshub
 import mlflow
 from mlflow.models import infer_signature
+import mlflow.xgboost
 
 dagshub_token = os.getenv("DAGSHUB_TOKEN")
 if not dagshub_token:
@@ -271,7 +272,9 @@ def main():
 
             # log models
           
-          mlflow.sklearn.log_model(xgb_model,artifact_path="xgboost")
+          mlflow.xgboost.log_model(xgb_model,artifact_path="xgboost")
+          
+          mlflow.sklearn.log_model(rf,artifact_path="random_forest")
 
           mlflow.sklearn.log_model(nb,artifact_path="naive_bayes")
 
