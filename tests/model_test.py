@@ -45,11 +45,10 @@ class TestModelLoading(unittest.TestCase):
     def test_model_loading(self):
         """Test if the model can be loaded properly from the Staging stage."""
         
-        # Retrive the latest versions of the models in the 'Staging' stage
-        versions = client.get_latest_versions(model_name,stages=["Staging"])
-
         # Initialize the Mlflow client again to interact with the server
         client = MlflowClient()
+        # Retrive the latest versions of the models in the 'Staging' stage
+        versions = client.get_latest_versions(model_name,stages=["Staging"])
 
         # If no versions are found,fails the test and skip the model loading part
         if not versions:
@@ -74,7 +73,7 @@ class TestModelLoading(unittest.TestCase):
                   "cuda" if torch.cuda.is_available() else "cpu")
 
             bilstm_model = load_bilstm_model(device,embedding_dim,hidden_dim,n_layers,dropout)
-            
+
             ensemble_model = mlflow.sklearn.load_model(f"runs:/{run_id}/meta_ensemble")
         except Exception as e:
             # If loading the modals fails,fail the test and output the error message
