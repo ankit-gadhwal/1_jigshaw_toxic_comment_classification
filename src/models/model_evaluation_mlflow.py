@@ -245,10 +245,10 @@ def main():
           # Generate predictions
           pred_probs, pred_labels = predict(ensemble_model,X_meta_test)
   
-          prediction_path = ("reports/predictions/test_predictions.json")
+          prediction_path = ("reports/predictions/test_predictions_mlflow.json")
 
           # Save results
-        #   save_predictions(merged_df_sub["merged_text"],pred_probs,pred_labels,prediction_path)
+        save_predictions(merged_df_sub["merged_text"],pred_probs,pred_labels,prediction_path)
           # metrics
           num_toxic = int(np.sum(pred_labels))
 
@@ -270,16 +270,7 @@ def main():
           mlflow.log_artifact(prediction_path)
 
             # log models
-          mlflow.sklearn.log_model(rf,artifact_path="random_forest")
-
-          mlflow.sklearn.log_model(xgb_model,artifact_path="xgboost")
-
-          mlflow.sklearn.log_model(nb,artifact_path="naive_bayes")
-
-          mlflow.pytorch.log_model(bilstm_model,artifact_path="bilstm")
-
-          signature = infer_signature(X_meta_test,ensemble_model.predict(X_meta_test))
-
+          
           mlflow.sklearn.log_model(xgb_model,artifact_path="xgboost")
 
           mlflow.sklearn.log_model(nb,artifact_path="naive_bayes")
