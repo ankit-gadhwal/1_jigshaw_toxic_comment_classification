@@ -8,12 +8,14 @@ from mlflow.tracking import MlflowClient
 dagshub_token = os.getenv("DAGSHUB_TOKEN")
 if not dagshub_token:
     raise EnvironmentError("DAGSHUB_TOKEN environment variable is not set")
-os.environ["MLFLOW_TRACKING_USERNAME"] = dagshub_token
-os.environ["MLFLOW_TRACKING_USERNAME"] = dagshub_token
 
 dagshub_url = "https://dagshub.com"
 repo_owner = "ankit-gadhwal"
 repo_name = "1_jigshaw_toxic_comment_classification"
+
+os.environ["MLFLOW_TRACKING_USERNAME"] = repo_owner
+os.environ["MLFLOW_TRACKING_PASSWORD"] = dagshub_token
+
 mlflow.set_tracking_uri(f"{dagshub_url}/{repo_owner}/{repo_name}.mlflow")
 
 mlflow.set_experiment("Final_model")

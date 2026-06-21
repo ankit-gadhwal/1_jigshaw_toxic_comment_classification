@@ -14,12 +14,14 @@ from src.models.model_evalvation import (load_params,load_vectorizer,load_glove_
 dagshub_token = os.getenv("JTC_CLASSIFICATION")
 if not dagshub_token:
     raise EnvironmentError("DAGSHUB_TOKEN environment variable is not set")
-os.environ["MLFLOW_TRACKING_USERNAME"] = dagshub_token
-os.environ["MLFLOW_TRACKING_USERNAME"] = dagshub_token
 
 dagshub_url = "https://dagshub.com"
 repo_owner = "ankit-gadhwal"
 repo_name = "1_jigshaw_toxic_comment_classification"
+
+os.environ["MLFLOW_TRACKING_USERNAME"] = repo_owner
+os.environ["MLFLOW_TRACKING_PASSWORD"] = dagshub_token
+
 mlflow.set_tracking_uri(f"{dagshub_url}/{repo_owner}/{repo_name}.mlflow")
 
 model_name = "meta_ensemble"
