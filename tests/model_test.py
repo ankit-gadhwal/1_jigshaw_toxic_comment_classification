@@ -101,7 +101,11 @@ class TestModelLoading(unittest.TestCase):
 
         nb = mlflow.sklearn.load_model(f"runs:/{run_id}/naive_bayes")
 
-        bilstm_model = mlflow.pytorch.load_model(f"runs:/{run_id}/bilstm")
+        (embedding_dim,hidden_dim,n_layers,dropout,batch_size,max_len,dim) = load_params("params.yaml")
+
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+        bilstm_model = load_bilstm_model(device,embedding_dim,hidden_dim,n_layers,dropout)
 
         ensemble_model = mlflow.sklearn.load_model(f"runs:/{run_id}/meta_ensemble")
 
