@@ -97,7 +97,7 @@ class TestModelLoading(unittest.TestCase):
         run_id = versions[0].run_id
         rf = mlflow.sklearn.load_model(f"runs:/{run_id}/random_forest")
         
-        xgb_model = mlflow.sklearn.load_model(f"runs:/{run_id}/xgboost")
+        xgb_model = mlflow.xgboost.load_model(f"runs:/{run_id}/xgboost")
 
         nb = mlflow.sklearn.load_model(f"runs:/{run_id}/naive_bayes")
 
