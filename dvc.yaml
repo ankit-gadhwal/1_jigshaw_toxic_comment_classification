@@ -2,8 +2,8 @@ stages:
   data_prep:
     cmd: python src/data/data_prep.py
     deps:
-    - data/raw/jigsaw_toxic_comment_classification_test.csv
-    - data/raw/jigsaw_toxic_comment_classification_train.csv
+    - jigsaw_toxic_comment_classification_test.csv
+    - jigsaw_toxic_comment_classification_train.csv
     - src/data/data_prep.py
     outs:
     - data/processed/merged_test.csv

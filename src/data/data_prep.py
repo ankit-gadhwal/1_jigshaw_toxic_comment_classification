@@ -56,9 +56,9 @@ def main():
 
     try:
 
-        train_path = "data/raw/jigsaw_toxic_comment_classification_train.csv"
+        train_path = "jigsaw_toxic_comment_classification_train.csv"
 
-        test_path = "data/raw/jigsaw_toxic_comment_classification_test.csv"
+        test_path = "jigsaw_toxic_comment_classification_test.csv"
 
         print("Loading train data...")
         train_df = load_data(train_path)
