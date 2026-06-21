@@ -25,7 +25,9 @@ jobs:
         run: |
           echo "Files in repro:"
           ls -R
-
+      - name: Pull DVC data
+        run: dvc pull
+        
       - name: Run DVC pipeline
         env:
          DAGSHUB_TOKEN: ${{secrets.JTC_CLASSIFICATION}}
