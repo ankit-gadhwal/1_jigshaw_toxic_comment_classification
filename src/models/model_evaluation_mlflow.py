@@ -13,7 +13,7 @@ import dagshub
 import mlflow
 from mlflow.models import infer_signature
 
-dagshub_token = os.getenv("JTC_CLASSIFICATION")
+dagshub_token = os.getenv("DAGSHUB_TOKEN")
 if not dagshub_token:
     raise EnvironmentError("DAGSHUB_TOKEN environment variable is not set")
 os.environ["MLFLOW_TRACKING_USERNAME"] = dagshub_token
