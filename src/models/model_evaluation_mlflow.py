@@ -278,11 +278,7 @@ def main():
 
           mlflow.sklearn.log_model(nb,artifact_path="naive_bayes")
 
-          input_example = torch.randn(
-            1,max_len,embedding_dim)
-
-          mlflow.pytorch.log_model(bilstm_model,artifact_path="bilstm",input_example=input_example)
-          
+          mlflow.pytorch.log_model(pytorch_model=bilstm_model,artifact_path="bilstm",serialization_format="pickle")
           signature = infer_signature(X_meta_test,ensemble_model.predict(X_meta_test))
 
           mlflow.sklearn.log_model(ensemble_model,artifact_path="meta_ensemble",signature=signature)
