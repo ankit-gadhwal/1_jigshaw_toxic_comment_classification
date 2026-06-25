@@ -3,18 +3,18 @@ stages:
   data_prep:
     cmd: python src/data/data_prep.py
     deps:
-    - path: data/raw/jigsaw_toxic_comment_classification_test.csv
+    - path: jigsaw_toxic_comment_classification_test.csv
       hash: md5
       md5: 4a3e670382dd8766de5269100ae64fb5
       size: 9167
-    - path: data/raw/jigsaw_toxic_comment_classification_train.csv
+    - path: jigsaw_toxic_comment_classification_train.csv
       hash: md5
       md5: adfba9f240d1acb1cfee923ef6f09976
       size: 1971422
     - path: src/data/data_prep.py
       hash: md5
-      md5: f452d91d4850d51d8ed36b72e10118cd
-      size: 2545
+      md5: 588b174020c0141d9d43a5faf1a4fce6
+      size: 2527
     outs:
     - path: data/processed/merged_test.csv
       hash: md5

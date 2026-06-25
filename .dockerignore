@@ -1,0 +1,16 @@
+myenv/
+.ipynb_checkpoints/
+notebooks/
+docs/
+references/
+reports/
+tests/
+src.egg-info/
+.git/
+.github/
+.env
+*.pyc
+__pycache__/
+requirements.txt/
+jigsaw_toxic_comment_classification_test.csv/
+jigsaw_toxic_comment_classification_train.csv/
